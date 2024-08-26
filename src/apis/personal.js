@@ -11,7 +11,5 @@ export const personalAvatarDownload = async (url) => {
 
 
 export const personalAvatarUpload = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return server.post('/xzp/personal/avatar/upload', formData)
+    return server.post('/xzp/personal/avatar/upload', file)
 }

@@ -11,17 +11,16 @@
     >
       <template #reference>
         <RouterLink :to="route.path" @click="toggleSelected(index)">
-          <div :class="['menu_icon', {'selected': selectedIndex === index}]">
+          <div :class="['icon_container', {'selected': selectedIndex === index}]">
             <el-icon :size="22">
               <component :is="route.icon" class="route_icon"/>
             </el-icon>
           </div>
         </RouterLink>
       </template>
-      <div v-if="route.children && route.children.length > 0">
-        <RouterLink v-for="(childRoute, childIndex) in route.children" :key="childIndex" :to="childRoute.path"
-                    @click.prevent>
-          <div class="submenu_icon">
+      <div v-if="route.children && route.children.length > 0" class="child_routes">
+        <RouterLink v-for="(childRoute, childIndex) in route.children" :key="childIndex" :to="childRoute.path" @click.prevent="toggleSelectedForChild(index, childIndex)">
+          <div :class="['icon_container', {'selected': selectedChildIndex[index] === childIndex}]">
             <el-icon :size="22">
               <component :is="childRoute.icon" class="route_icon"/>
             </el-icon>
@@ -44,9 +43,19 @@ import { Odometer, User, Phone, Key, Setting } from '@element-plus/icons-vue';
 
 const selectedIndex = ref(-1);
 const showSubMenu = ref([]);
+const selectedChildIndex = ref([]);
 
 const toggleSelected = (index) => {
   selectedIndex.value = selectedIndex.value === index ? -1 : index;
+};
+
+const toggleSelectedForChild = (parentIndex, childIndex) => {
+  // Highlight the child route when it is clicked.
+  if (selectedChildIndex.value[parentIndex] === childIndex) {
+    selectedChildIndex.value[parentIndex] = -1;
+  } else {
+    selectedChildIndex.value[parentIndex] = childIndex;
+  }
 };
 
 const routes = [
@@ -63,14 +72,15 @@ const routes = [
   { name: '系统管理', path: '/setting', icon: Setting },
 ];
 
-// Initialize the submenu visibility array.
+// Initialize the submenu visibility and child selection arrays.
 for (let i = 0; i < routes.length; i++) {
   showSubMenu.value[i] = false;
+  selectedChildIndex.value[i] = -1;
 }
 </script>
 
 <style scoped>
-.menu_icon {
+.icon_container {
   width: 50px;
   height: 50px;
   display: flex;
@@ -79,39 +89,41 @@ for (let i = 0; i < routes.length; i++) {
   background-color: transparent;
 }
 
-.menu_icon:hover {
+.icon_container:hover {
   opacity: 0.5;
-}
-
-/* When .menu_icon is in the selected state, hovering does not change opacity */
-.selected:hover {
-  opacity: 1;
 }
 
 .selected {
   background-color: #ddeafa;
 }
 
-.route_icon {
-  color: #2f3846;
+.selected:hover .route_icon, .submenu_icon:hover .route_icon {
+  opacity: 1;
 }
 
 .selected .route_icon {
   color: #409EFF;
 }
 
-.sub_menu{
-  width: 50px;
-  min-width: 50px;
-}
-
-
-.submenu_icon {
-  margin: 5px;
-}
-
 .submenu_icon:hover {
   background-color: #f0f0f0;
   cursor: pointer;
+}
+
+.submenu_icon:active .route_icon {
+  color: #409EFF;
+}
+
+.route_icon {
+  color: #2f3846;
+}
+
+.child_routes {
+  width: 100px; /* Set the desired width for the child routes section */
+}
+
+/* Target the content of the popover specifically for the child routes */
+.sub_menu .child_routes .el-popover__content {
+  width: 100px; /* Adjust the width as needed */
 }
 </style>

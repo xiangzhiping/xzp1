@@ -1,17 +1,26 @@
 <template>
-  <div class="personal_avatar">
-    <el-upload
-        class="avatar-uploader"
-        :action="avatarUploadUrl"
-        :show-file-list="false"
-        :on-success="handleAfterUpload"
-        :before-upload="beforeAvatarUpload"
-    >
-      <img v-if="personalAvatarUrl" :src="personalAvatarUrl" class="avatar" alt="头像"/>
-      <el-icon v-else class="avatar-uploader-icon">
-        <Plus/>
+  <div class="avatar">
+    <div class="avatar_image">
+      <img v-if="personalAvatarUrl" :src="personalAvatarUrl"/>
+      <el-icon v-else size="25" color="#959696">
+        <Avatar/>
       </el-icon>
-    </el-upload>
+    </div>
+    <div class="avatar_button">
+      <input type="file" id="avatar_upload" accept="image/png,image/jpeg" @change="personalAvatarUploadHandle">
+      <el-button type="success" plain @click="personalAvatarUploadClickHandel">
+        <el-icon size="20">
+          <Upload/>
+        </el-icon>
+        <span>上传头像</span>
+      </el-button>
+      <el-button type="danger" plain @click="personalAvatarDeleteHandel">
+        <el-icon size="20">
+          <Delete/>
+        </el-icon>
+        <span>删除头像</span>
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -19,122 +28,88 @@
 import {ref} from 'vue';
 import {ElMessage} from 'element-plus';
 import {personalAvatarLinkGet, personalAvatarDownload, personalAvatarUpload} from '@/apis/personal.js';
-import {Plus} from "@element-plus/icons-vue";
+import {Upload, Delete, Avatar} from '@element-plus/icons-vue';
 
 const personalAvatarUrl = ref('');
-const avatarUploadUrl = ref(import.meta.env.XZP_FASTAPI_API_BASE_URL + '/xzp/personal/avatar/upload');
 
-const beforeAvatarUpload = async (rawFile) => {
-  if (rawFile.type !== 'image/png' && rawFile.type !== 'image/jpeg') {
-    ElMessage.error('上传文件格式务必为 PNG 或 JPEG');
-    return false;
-  }
-  if (rawFile.size / 1024 / 1024 > 4) {
-    ElMessage.error('上传文件大小需小于 4MB');
-    return false;
-  }
-  return true;
-}
-
-const handleAfterUpload = async (response) => {
-  if (response.success) { // 假设后端返回成功标志
-    await personalAvatarGetHandle();
-  } else {
-    ElMessage.error('上传失败，请重试');
-  }
-}
-
-const personalAvatarGetHandle = async () => {
-  const link = (await personalAvatarLinkGet()).data;
-  const avatar = await personalAvatarDownload(link);
-  personalAvatarUrl.value = URL.createObjectURL(avatar);
+const personalAvatarUploadClickHandel = () => {
+  document.getElementById('avatar_upload').click();
 };
 
+const personalAvatarUploadHandle = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
 
+  if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+    ElMessage.error('上传头像格式为 PNG 或 JPEG');
+    return;
+  }
+  if (file.size / 1024 / 1024 > 2) {
+    ElMessage.error('上传头像大小需小于 2MB');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('avatar', file);
+  const res = await personalAvatarUpload(formData);
+  if (res.code === 200) {
+    await personalAvatarLinkGetHandel();
+  }
+};
+
+const personalAvatarLinkGetHandel = async () => {
+  const url = (await personalAvatarLinkGet()).data;
+  const img = await personalAvatarDownload(url);
+  personalAvatarUrl.value = URL.createObjectURL(img);
+};
+
+const personalAvatarDeleteHandel = async () => {
+  personalAvatarUrl.value = '';
+  ElMessage.success('头像已删除。');
+};
+
+personalAvatarLinkGetHandel()
 </script>
 
 <style scoped>
-.personal_avatar {
-  width: 240px;
+.avatar {
+  width: 260px;
   height: 300px;
   border-radius: 4px;
   display: flex;
+  justify-content: left;
   flex-direction: column;
 }
 
-.avatar_show {
-  width: 230px;
-  height: 230px;
+.avatar_image {
+  width: 248px;
+  height: 250px;
+  border-radius: 4px;
   border: 1px solid var(--el-border-color);
   box-shadow: var(--el-box-shadow-light);
-  border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
 }
 
-.el-image {
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
+img{
+  width: 50%;
+  height: 50%;
+}
+
+#avatar_upload {
+  display: none
 }
 
 .avatar_button {
-  width: 230px;
+  width: 250px;
   display: flex;
   flex-grow: 1;
-  justify-content: space-around;
-  align-items: center;
-  border-radius: 4px;
+  justify-content: center;
+  align-items: end;
 }
 
 .el-button {
-  height: 40px;
-  width: 100px;
-  margin-top: 27px;
-  box-shadow: var(--el-box-shadow-light);
-}
-
-.personal_info {
-  height: 300px;
-  border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-  border: 1px solid var(--el-border-color);
-  box-shadow: var(--el-box-shadow-light);
-}
-
-:deep(.my-label) {
-  background: var(--el-color-success-light-9) !important;
-}
-
-:deep(.account_item) {
-  background: var(--el-color-danger-light-9);
-}
-</style>
-
-<style>
-.avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
-}
-
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
+  height: 30px;
 }
 </style>
