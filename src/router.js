@@ -9,13 +9,13 @@ const routes = [
                 path: 'dashboard', component: () => import('@/views/Dashboard.vue'),
             },
             {
-                path: 'user/', component: () => import('@/views/user.vue')
+                path: 'user/', component: () => import('@/components/user/user.vue')
             },
             {
                 path: 'user/role', component: () => import('@/views/user_role.vue'),
             },
             {
-                path: 'user/permission', component: () => import('@/views/user_permission.vue')
+                path: 'user/permission', component: () => import('@/views/user1.vue')
             },
             {
                 path: 'personal', component: () => import('@/views/personal.vue')

@@ -6,7 +6,6 @@ import UserBody from "@/components/user/user_body.vue";
 <template>
   <div class="user">
     <UserHead></UserHead>
-    <UserBody></UserBody>
   </div>
 </template>
 

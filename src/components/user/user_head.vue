@@ -158,7 +158,7 @@
           </el-form-item>
           <el-form-item style="margin-left: 10px">
             <el-button plain type="primary" @click="userQueryHandel">
-              <el-icon  size="20">
+              <el-icon size="20">
                 <Search/>
               </el-icon>
               <span>查 询</span>
@@ -272,14 +272,13 @@ const userStatusOptions = reactive([
 .user_head {
   width: calc(100% - 2px);
   height: auto;
-  border: 1px solid var(--el-border-color);
-  box-shadow: var(--el-box-shadow-light);
+  border-bottom: 1px solid var(--el-border-color);
   display: flex;
   justify-content: left;
   flex-wrap: wrap;
 }
 
-.select_button_query span{
+.select_button_query span {
   font-size: 18px;
 }
 
@@ -308,7 +307,7 @@ const userStatusOptions = reactive([
   width: 279px;
 }
 
-.el-button{
+.el-button {
   height: 30px;
 }
 
@@ -333,6 +332,17 @@ const userStatusOptions = reactive([
   height: 30px;
 }
 
+:deep(.el-pager) {
+  margin-top: 2px;
+}
+
+:deep(.btn-prev) {
+  display: none;
+}
+
+:deep(.btn-next) {
+  display: none;
+}
 
 :deep(.el-range-separator) {
   display: none;
