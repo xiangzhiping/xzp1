@@ -79,7 +79,7 @@ const userAccountPasswordLoginHandel = async () => {
       const res = await userAccountPasswordLogin(loginForm)
       console.log(res)
       if (res.code === 200) {
-        await router.push('/')
+        await router.push('/dashboard')
         localStorage.setItem("Authorization", res.data)
       }
     } else {

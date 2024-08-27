@@ -1,30 +1,32 @@
 <template>
-  <div class="common-layout">
-    <div class="head">
-      <TopNav/>
+  <div class="main_container">
+    <div class="header_box">
+      <headerCpt/>
     </div>
-    <div class="body">
-      <div class="left_side">
-        <SideNav></SideNav>
+    <div class="container_box">
+      <div class="aside_box">
+        <asideCpt></asideCpt>
       </div>
-      <div class="right_side">
-        <router-view v-slot="{ Component }">
-          <keep-alive>
-            <component :is="Component"/>
-          </keep-alive>
-        </router-view>
+      <div class="main_box">
+        <transition name="el-zoom-in-top">
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component"/>
+            </keep-alive>
+          </router-view>
+        </transition>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import SideNav from "@/components/main/SideNav.vue";
-import TopNav from "@/components/main/TopNav.vue";
+import asideCpt from "@/components/main/aside.vue";
+import headerCpt from "@/components/main/header.vue";
 </script>
 
 <style scoped>
-.common-layout {
+.main_container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -32,7 +34,7 @@ import TopNav from "@/components/main/TopNav.vue";
   overflow: hidden;
 }
 
-.head {
+.header_box {
   width: 100%;
   height: 50px;
   border-bottom: 1px solid var(--el-border-color);
@@ -41,14 +43,14 @@ import TopNav from "@/components/main/TopNav.vue";
   justify-content: right;
 }
 
-.body {
+.container_box {
   width: 100%;
   display: flex;
   justify-content: space-between;
   flex-grow: 1;
 }
 
-.left_side {
+.aside_box {
   width: 50px;
   height: 100%;
   display: flex;
@@ -58,9 +60,10 @@ import TopNav from "@/components/main/TopNav.vue";
 
 }
 
-.right_side {
+.main_box {
   height: calc(100% - 6px);
   width: calc(100% - 57px);
+  border-radius: 4px;
   margin-top: 5px;
   display: flex;
   border-left: 1px solid var(--el-border-color);

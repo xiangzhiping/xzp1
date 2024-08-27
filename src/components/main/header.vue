@@ -10,12 +10,12 @@
           <UserFilled></UserFilled>
         </el-icon>
       </template>
-      <div class="popover_box" @click="navigateToPersonalHandel">
-        <el-icon size="20" color="#606266" style="cursor: pointer">
-          <User></User>
+      <el-button plain type="success" @click="navigateToPersonalHandel">
+        <el-icon size="20">
+          <User/>
         </el-icon>
         <span>个人信息</span>
-      </div>
+      </el-button>
     </el-popover>
   </div>
   <div class="personal_avatar">
@@ -27,7 +27,7 @@
 
 <script setup>
 import {ref} from 'vue';
-import {Picture, UserFilled, User} from '@element-plus/icons-vue'
+import {Picture, UserFilled, User, Refresh} from '@element-plus/icons-vue'
 import {personalAvatarLinkGet, personalAvatarDownload} from '@/apis/personal.js';
 import router from "@/router";
 
@@ -38,7 +38,7 @@ const personalAvatarGetHandle = async () => {
   const avatar = await personalAvatarDownload(link);
   personalAvatarUrl.value = URL.createObjectURL(avatar);
 };
-// personalAvatarGetHandle();
+personalAvatarGetHandle();
 
 const navigateToPersonalHandel = async () => {
   await router.push('/personal')
@@ -65,7 +65,6 @@ const navigateToPersonalHandel = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
 
 .popover_box{

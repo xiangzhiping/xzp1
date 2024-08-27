@@ -1,10 +1,10 @@
 <template>
   <div class="user_body" ref="userBodyRef">
-    <el-table :data="userQueryRes.users" border stripe
+    <el-table :data="userQueryRes.users"  stripe
               :height="tableHeight"
-              :header-cell-style="{background: '#d1e1ff', color: '#909399'}">
-      <el-table-column type="selection" width="40"/>
+              :header-cell-style="{background: '#e5eaf1', color: '#8a8b8d'}">
       <el-table-column prop="user_id" label="用户ID" width="185" align="center"></el-table-column>
+      <el-table-column prop="nickname" label="昵称" width="200" align="center"></el-table-column>
       <el-table-column prop="phone" label="电话号码" width="125" align="center"></el-table-column>
       <el-table-column prop="email" label="邮箱地址" width="250" align="center"></el-table-column>
       <el-table-column prop="avatar_key" label="头像Key" width="400" show-overflow-tooltip
@@ -28,22 +28,22 @@
       <el-table-column prop="user_status" label="用户状态" width="100" align="center">
         <template #default="{ row }">
           <el-icon :size="18" :color="row.user_status === true ? '#67C23A' : '#F56C6C'">
-            <UserFilled/>
+            <User/>
           </el-icon>
         </template>
       </el-table-column>
       <el-table-column prop="operator" label="操作者ID" width="185" align="center"></el-table-column>
-      <el-table-column prop="login_datetime" label="登录时间" width="160" align="center"></el-table-column>
-      <el-table-column prop="logout_datetime" label="登出时间" width="160" align="center"></el-table-column>
-      <el-table-column prop="create_datetime" label="创建时间" width="160" align="center"></el-table-column>
-      <el-table-column prop="update_datetime" label="更新时间" width="160" align="center"></el-table-column>
-      <el-table-column prop="delete_datetime" label="删除时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="login_datetime" label="登录日期时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="logout_datetime" label="登出日期时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="create_datetime" label="创建日期时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="update_datetime" label="更新日期时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="delete_datetime" label="删除日期时间" width="160" align="center"></el-table-column>
     </el-table>
   </div>
 </template>
 
 <script setup>
-import { UserFilled, SwitchButton } from '@element-plus/icons-vue';
+import { User, SwitchButton } from '@element-plus/icons-vue';
 import eventBus from '@/utils/event_bus.js';
 import { ref, onMounted, computed, watchEffect } from 'vue';
 import { userAccountStatusUpdate } from '@/apis/user.js';
@@ -55,9 +55,7 @@ const tableHeight = computed(() => {
   return userBodyRef.value ? userBodyRef.value.clientHeight - 2 : 'auto';
 });
 
-// 定义 adjustTableHeight 函数
 const adjustTableHeight = () => {
-  // 动态调整表格高度
   if (userBodyRef.value) {
     userBodyRef.value.style.height = `${userBodyRef.value.offsetHeight - 2}px`;
   }

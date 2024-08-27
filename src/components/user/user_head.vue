@@ -149,16 +149,16 @@
             </el-select>
           </el-form-item>
           <el-form-item style="margin-left: 10px">
-            <el-button type="info" @click="userQueryFormRefreshHandel">
-              <el-icon color="white" size="20">
+            <el-button plain type="info" @click="userQueryFormRefreshHandel">
+              <el-icon size="20">
                 <Refresh/>
               </el-icon>
               <span>重 置</span>
             </el-button>
           </el-form-item>
           <el-form-item style="margin-left: 10px">
-            <el-button type="primary" @click="userQueryHandel">
-              <el-icon color="white" size="20">
+            <el-button plain type="primary" @click="userQueryHandel">
+              <el-icon  size="20">
                 <Search/>
               </el-icon>
               <span>查 询</span>

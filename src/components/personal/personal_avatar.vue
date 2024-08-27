@@ -1,7 +1,7 @@
 <template>
   <div class="avatar">
     <div class="avatar_image">
-      <img v-if="personalAvatarUrl" :src="personalAvatarUrl"/>
+      <img v-if="personalAvatarUrl" :src="personalAvatarUrl" alt="头像"/>
       <el-icon v-else size="25" color="#959696">
         <Avatar/>
       </el-icon>
@@ -27,7 +27,12 @@
 <script setup>
 import {ref} from 'vue';
 import {ElMessage} from 'element-plus';
-import {personalAvatarLinkGet, personalAvatarDownload, personalAvatarUpload} from '@/apis/personal.js';
+import {
+  personalAvatarLinkGet,
+  personalAvatarDownload,
+  personalAvatarUpload,
+  personalAvatarDelete
+} from '@/apis/personal.js';
 import {Upload, Delete, Avatar} from '@element-plus/icons-vue';
 
 const personalAvatarUrl = ref('');
@@ -65,7 +70,7 @@ const personalAvatarLinkGetHandel = async () => {
 
 const personalAvatarDeleteHandel = async () => {
   personalAvatarUrl.value = '';
-  ElMessage.success('头像已删除。');
+  await personalAvatarDelete()
 };
 
 personalAvatarLinkGetHandel()
@@ -73,8 +78,8 @@ personalAvatarLinkGetHandel()
 
 <style scoped>
 .avatar {
-  width: 260px;
-  height: 300px;
+  width: 240px;
+  height: 280px;
   border-radius: 4px;
   display: flex;
   justify-content: left;
@@ -82,19 +87,16 @@ personalAvatarLinkGetHandel()
 }
 
 .avatar_image {
-  width: 248px;
-  height: 250px;
+  width: 230px;
+  height: 230px;
+  cursor: pointer;
   border-radius: 4px;
-  border: 1px solid var(--el-border-color);
+  border-bottom: 1px solid var(--el-border-color);
+  border-right: 1px solid var(--el-border-color);
   box-shadow: var(--el-box-shadow-light);
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-img{
-  width: 50%;
-  height: 50%;
 }
 
 #avatar_upload {
@@ -102,14 +104,15 @@ img{
 }
 
 .avatar_button {
-  width: 250px;
+  width: 230px;
   display: flex;
   flex-grow: 1;
-  justify-content: center;
+  justify-content: space-between;
   align-items: end;
 }
 
 .el-button {
-  height: 30px;
+  height: 40px;
+  width: 100px;
 }
 </style>

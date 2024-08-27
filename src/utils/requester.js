@@ -10,7 +10,7 @@ service.interceptors.request.use(function (config) {
     config.headers['Authorization'] = `Bearer ${localStorage.getItem('Authorization')}`
     return config;
 }, function (error) {
-    console.log(error);
+    ElMessage.error(error)
     return Promise.reject(error);
 });
 
@@ -21,7 +21,7 @@ service.interceptors.response.use(function (response) {
             if (res.code === 200) {
                 ElMessage.success(res.msg)
                 return res
-            } else if (res.code === 401 || res.code === 403) {
+            } else if ((res.code === 401 && res.data === 'AUTH_FAILED') || (res.code === 403 && res.data === 'AUTH_FAILED')) {
                 ElMessage.warning(res.msg)
                 router.push('/login').then(r => null)
             } else if (200 < res.code < 500) {

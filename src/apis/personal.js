@@ -13,3 +13,13 @@ export const personalAvatarDownload = async (url) => {
 export const personalAvatarUpload = async (file) => {
     return server.post('/xzp/personal/avatar/upload', file)
 }
+
+
+export const personalAvatarDelete = async () => {
+    return server.del('/xzp/personal/avatar/delete')
+}
+
+
+export const personalInfoGet = async () => {
+    return await server.get('/xzp/personal/query')
+}
